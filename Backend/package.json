@@ -1,0 +1,30 @@
+{
+  "name": "b2111798-tran-minh-hien-backend1",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hientran966/B2111798-Tran-Minh-Hien-Backend1.git"
+  },
+  "author": "Tran Minh Hien",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hientran966/B2111798-Tran-Minh-Hien-Backend1/issues"
+  },
+  "homepage": "https://github.com/hientran966/B2111798-Tran-Minh-Hien-Backend1#readme",
+  "description": "",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "mongodb": "^6.13.1"
+  },
+  "devDependencies": {
+    "eslint": "^9.21.0",
+    "eslint-config-prettier": "^10.0.1",
+    "nodemon": "^3.1.9",
+    "prettier": "^3.5.2"
+  }
+}
