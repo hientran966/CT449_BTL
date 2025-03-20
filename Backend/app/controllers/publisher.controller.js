@@ -85,7 +85,7 @@ exports.delete = async (req, res, next) => {
         return res.send({message: "Publisher was deleted successfully"});
     } catch (error) {
         return next(
-            new ApiError(500, `Could not delete Publisher with id=${req.params.id}`)
+            new ApiError(500, `Could not delete publisher with id=${req.params.id}`)
         );
     }
 };
@@ -95,11 +95,11 @@ exports.deleteAll = async (_req, res, next) => {
         const publisherService = new PublisherService(MongoDB.client);
         const deletedCount = await publisherService.deleteAll();
         return res.send({
-            message: `${deletedCount} Publishers was deleted successfully`
+            message: `${deletedCount} publishers was deleted successfully`
         });
     } catch (error) {
         return next(
-            new ApiError(500, "An error occurred while removing all Publishers")
+            new ApiError(500, "An error occurred while removing all publishers")
         );
     }
 };

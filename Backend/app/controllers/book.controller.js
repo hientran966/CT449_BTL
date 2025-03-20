@@ -1,8 +1,17 @@
 const ApiError = require("../api-error");
 const BookService = require("../services/book.service");
+const PublisherService = require("../services/publisher.service");
 const MongoDB = require("../utils/mongodb.util");
 
 exports.create = async (req, res, next) => {
+    const publisherService = new PublisherService(MongoDB.client);
+
+    // Check if MADOCGIA exists
+    const publisherExists = await publisherService.findById(req.body.MANXB);
+    if (!publisherExists) {
+        return next(new ApiError(400, "Publisher id does not exist"));
+    }
+
     if (!req.body.TENSACH) {
         return next(new ApiError(400, "Name can not be empty"));
     }
@@ -57,6 +66,17 @@ exports.findOne = async (req, res, next) => {
 };
 
 exports.update = async (req, res, next) => {
+    const publisherService = new PublisherService(MongoDB.client);
+
+    // Check if MADOCGIA exists
+    const publisherExists = await publisherService.findById(req.body.MANXB);
+    if (!publisherExists) {
+        return next(new ApiError(400, "Publisher id does not exist"));
+    }
+
+    if (!req.body.TENSACH) {
+        return next(new ApiError(400, "Name can not be empty"));
+    }
     if (Object.keys(req.body).length === 0) {
         return next(new ApiError(400, "Data to update can not be emty"));
     }
@@ -80,12 +100,12 @@ exports.delete = async (req, res, next) => {
         const bookService = new BookService(MongoDB.client);
         const document = await bookService.delete(req.params.id);
         if (!document) {
-            return next(new ApiError(404, "Contact not found"));
+            return next(new ApiError(404, "Book not found"));
         }
-        return res.send({message: "Contact was deleted successfully"});
+        return res.send({message: "Book was deleted successfully"});
     } catch (error) {
         return next(
-            new ApiError(500, `Could not delete contact with id=${req.params.id}`)
+            new ApiError(500, `Could not delete book with id=${req.params.id}`)
         );
     }
 };
@@ -95,11 +115,11 @@ exports.deleteAll = async (_req, res, next) => {
         const bookService = new BookService(MongoDB.client);
         const deletedCount = await bookService.deleteAll();
         return res.send({
-            message: `${deletedCount} contacts was deleted successfully`
+            message: `${deletedCount} books was deleted successfully`
         });
     } catch (error) {
         return next(
-            new ApiError(500, "An error occurred while removing all contacts")
+            new ApiError(500, "An error occurred while removing all books")
         );
     }
 };
