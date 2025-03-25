@@ -2,6 +2,7 @@ import { createWebHistory, createRouter } from "vue-router";
 import Book from "@/views/Book.vue";
 
 const routes = [
+  //Sách
   {
     path: "/",
     name: "book",
@@ -11,26 +12,6 @@ const routes = [
     path: "/books",
     name: "adminbook",
     component: () => import("@/views/AdminBook.vue"),
-  },
-  {
-    path: "/publisher",
-    name: "publisher",
-    component: () => import("@/views/NotFound.vue"),
-  },
-  {
-    path: "/reader",
-    name: "reader",
-    component: () => import("@/views/NotFound.vue"),
-  },
-  {
-    path: "/staff",
-    name: "staff",
-    component: () => import("@/views/NotFound.vue"),
-  },
-  {
-    path: "/:pathMatch(.*)*",
-    name: "notfound",
-    component: () => import("@/views/NotFound.vue"),
   },
   {
     path: "/books/:id",
@@ -43,6 +24,40 @@ const routes = [
     name: "book.add",
     component: () => import("@/views/BookAdd.vue"),
   },
+
+  //Nhà xuất bản
+  {
+    path: "/publisher",
+    name: "publisher",
+    component: () => import("@/views/Publisher.vue"),
+  },
+  {
+    path: "/publisher/:id",
+    name: "publisher.edit",
+    component: () => import("@/views/PublisherEdit.vue"),
+    props: true,
+  },
+  {
+    path: "/publisher/add",
+    name: "publisher.add",
+    component: () => import("@/views/PublisherAdd.vue"),
+  },
+
+  //Đọc giả
+  {
+    path: "/reader",
+    name: "reader",
+    component: () => import("@/views/NotFound.vue"),
+  },
+
+  //Nhân viên
+  {
+    path: "/staff",
+    name: "staff",
+    component: () => import("@/views/NotFound.vue"),
+  },
+
+  //Mượn sách
   {
     path: "/borrow",
     name: "borrow",
@@ -54,6 +69,13 @@ const routes = [
     name: "borrow.add",
     component: () => import("@/views/BorrowAdd.vue"),
     props: true,
+  },
+
+  //Not Found
+  {
+    path: "/:pathMatch(.*)*",
+    name: "notfound",
+    component: () => import("@/views/NotFound.vue"),
   },
 ];
 
