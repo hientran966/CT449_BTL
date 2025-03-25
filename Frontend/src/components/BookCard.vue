@@ -32,17 +32,17 @@ import PublisherService from "@/services/publisher.service";
 
     export default {
         props: {
-        book: { type: Object, required: true },
+            book: { type: Object, required: true },
         },
         data() {
         return {
-        publisherName: ""
+            publisherName: ""
         };
     },
     async created() {
         if (this.book.MANXB) {
-        const publisher = await PublisherService.get(this.book.MANXB);
-        this.publisherName = publisher ? publisher.TENNXB : "Không xác định";
+            const publisher = await PublisherService.get(this.book.MANXB);
+            this.publisherName = publisher ? publisher.TENNXB : "Không xác định";
         }
     }
 };
