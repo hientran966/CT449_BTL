@@ -10,7 +10,7 @@ const routes = [
   {
     path: "/books",
     name: "adminbook",
-    component: () => import("@/views/NotFound.vue"),
+    component: () => import("@/views/AdminBook.vue"),
   },
   {
     path: "/publisher",
@@ -44,9 +44,15 @@ const routes = [
     component: () => import("@/views/BookAdd.vue"),
   },
   {
-    path: "/borrow/:id",
+    path: "/borrow",
     name: "borrow",
-    component: () => import("@/views/Book.vue"),
+    component: () => import("@/views/Borrow.vue"),
+    props: true,
+  },
+  {
+    path: "/borrow/:id",
+    name: "borrow.add",
+    component: () => import("@/views/BorrowAdd.vue"),
     props: true,
   },
 ];

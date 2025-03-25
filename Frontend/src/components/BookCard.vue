@@ -1,11 +1,3 @@
-<script>
-    export default {
-        props: {
-        book: { type: Object, required: true },
-        },
-    };
-</script>
-
 <template>
     <div>
         <div class="p-1">
@@ -26,7 +18,7 @@
         </div>
         <div class="p-1">
             <strong>Nhà xuất bản:</strong>
-            {{ book.MANXB }}
+            {{ publisherName }}
         </div>
         <div class="p-1">
             <strong>Tác giả:</strong>
@@ -34,3 +26,24 @@
         </div>
     </div>
 </template>
+
+<script>
+import PublisherService from "@/services/publisher.service";
+
+    export default {
+        props: {
+        book: { type: Object, required: true },
+        },
+        data() {
+        return {
+        publisherName: ""
+        };
+    },
+    async created() {
+        if (this.book.MANXB) {
+        const publisher = await PublisherService.get(this.book.MANXB);
+        this.publisherName = publisher ? publisher.TENNXB : "Không xác định";
+        }
+    }
+};
+</script>

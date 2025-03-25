@@ -1,28 +1,23 @@
 <template>
   <Form @submit="submitBorrow" :validation-schema="borrowFormSchema">
     <div class="form-group">
-      <label for="MADOCGIA">Đọc Giả</label>
-
-      <Field
-        name="MADOCGIA"
-        type="text"
-        class="form-control"
-        v-model="borrowLocal.MADOCGIA"
-      />
-
-      <ErrorMessage name="MADOCGIA" class="error-feedback" />
-    </div>
-    <div class="form-group">
       <label for="MASACH">Tên Sách</label>
 
       <Field
         name="MASACH"
         type="text"
         class="form-control"
-        v-model="borrowLocal.MASACH"
+        v-model="bookTitle"
+        disabled
       />
-
-      <ErrorMessage name="MASACH" class="error-feedback" />
+    </div>
+    <div  class="form-group">
+      <label for="MADOCGIA">Thông tin đọc giả:</label>
+      <select v-model="borrowLocal.MADOCGIA" class="form-control">
+        <option v-for="reader in readers" :key="reader._id" :value="reader._id">
+          {{ reader.TEN }}
+        </option>
+      </select>
     </div>
     <div class="form-group">
       <label for="NGAYMUON">Ngày Mượn</label>
@@ -45,7 +40,8 @@
   </Form>
 </template>
 <script>
-import * as yup from "yup";
+import ReaderService from "@/services/reader.service";
+import BookService from "@/services/book.service";
 import { Form, Field, ErrorMessage } from "vee-validate";
 export default {
   components: {
@@ -54,15 +50,18 @@ export default {
     ErrorMessage,
   },
   emits: ["submit:borrow"],
-  props: {
-    borrow: { type: Object, required: true },
-  },
+  props: 
+    ['id']
+  ,
   data() {
-    const borrowFormSchema = yup.object().shape({
-    });
     return {
-      borrowLocal: this.borrow,
-      borrowFormSchema,
+      borrowLocal: {
+        MASACH: this.id,
+        MADOCGIA: "",
+        NGAYMUON: "",
+      },
+      readers: [],
+      bookTitle: "",
     };
   },
   methods: {
@@ -79,6 +78,12 @@ export default {
       } else this.$router.push({ name: "borrow" });
     },
   },
+  async created() {
+    console.log("ID nhận được:", this.id);
+    const book = await BookService.get(this.id);
+    this.bookTitle = book ? book.TENSACH : "Không xác định";
+    this.readers = await ReaderService.getAll();
+  }
 };
 </script>
 <style scoped>

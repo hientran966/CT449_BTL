@@ -11,13 +11,13 @@ exports.create = async (req, res, next) => {
     // Check if MADOCGIA exists
     const readerExists = await readerService.findById(req.body.MADOCGIA);
     if (!readerExists) {
-        return next(new ApiError(400, "Reader id does not exist"));
+        return next(new ApiError(404, "Reader id does not exist"));
     }
 
     // Check if MASACH exists
     const bookExists = await bookService.findById(req.body.MASACH);
     if (!bookExists) {
-        return next(new ApiError(400, "Book id does not exist"));
+        return next(new ApiError(404, "Book id does not exist"));
     }
 
     if (!req.body.MADOCGIA || typeof req.body.MADOCGIA !== 'string') {

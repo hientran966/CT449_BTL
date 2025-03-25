@@ -48,8 +48,16 @@
 
       <ErrorMessage name="NAMXUATBAN" class="error-feedback" />
     </div>
+    <div  class="form-group">
+      <label for="MANXB">Nhà xuất bản:</label>
+      <select v-model="bookLocal.MANXB" class="form-control">
+        <option v-for="publisher in publishers" :key="publisher._id" :value="publisher._id">
+          {{ publisher.TENNXB }}
+        </option>
+      </select>
+    </div>
     <div class="form-group">
-      <label for="TACGIA">Năm Xuất Bản</label>
+      <label for="TACGIA">Tác Giả</label>
 
       <Field
         name="TACGIA"
@@ -78,6 +86,7 @@
 </template>
 <script>
 import * as yup from "yup";
+import PublisherService from "@/services/publisher.service";
 import { Form, Field, ErrorMessage } from "vee-validate";
 export default {
   components: {
@@ -112,6 +121,7 @@ export default {
         .required('Năm không được để trống'),
     });
     return {
+      publishers: [],
       bookLocal: this.book,
       bookFormSchema,
     };
@@ -133,6 +143,9 @@ export default {
       } else this.$router.push({ name: "book" });
     },
   },
+  async created() {
+    this.publishers = await PublisherService.getAll();
+  }
 };
 </script>
 <style scoped>
