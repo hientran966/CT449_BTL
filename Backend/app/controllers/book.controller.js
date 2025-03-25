@@ -1,17 +1,8 @@
 const ApiError = require("../api-error");
 const BookService = require("../services/book.service");
-const PublisherService = require("../services/publisher.service");
 const MongoDB = require("../utils/mongodb.util");
 
 exports.create = async (req, res, next) => {
-    const publisherService = new PublisherService(MongoDB.client);
-
-    // Check if MADOCGIA exists
-    const publisherExists = await publisherService.findById(req.body.MANXB);
-    if (!publisherExists) {
-        return next(new ApiError(400, "Publisher id does not exist"));
-    }
-
     if (!req.body.TENSACH) {
         return next(new ApiError(400, "Name can not be empty"));
     }
@@ -66,17 +57,6 @@ exports.findOne = async (req, res, next) => {
 };
 
 exports.update = async (req, res, next) => {
-    const publisherService = new PublisherService(MongoDB.client);
-
-    // Check if MADOCGIA exists
-    const publisherExists = await publisherService.findById(req.body.MANXB);
-    if (!publisherExists) {
-        return next(new ApiError(400, "Publisher id does not exist"));
-    }
-
-    if (!req.body.TENSACH) {
-        return next(new ApiError(400, "Name can not be empty"));
-    }
     if (Object.keys(req.body).length === 0) {
         return next(new ApiError(400, "Data to update can not be emty"));
     }
