@@ -3,6 +3,8 @@ const readers = require("../controllers/reader.controller");
 
 const router = express.Router();
 
+router.get("/account/:accountId", readers.findByAccountId);
+
 router.route("/")
     .get(readers.findAll)
     .post(readers.create)

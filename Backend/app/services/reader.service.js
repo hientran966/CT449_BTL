@@ -59,6 +59,9 @@ class ReaderService {
             _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
         });
     }
+    async findByAccountId(accountId) {
+        return await this.Reader.findOne({ TaiKhoan: ObjectId.isValid(accountId) ? new ObjectId(accountId) : null });
+    }    
 
     async update(id, payload) {
         const filter = {

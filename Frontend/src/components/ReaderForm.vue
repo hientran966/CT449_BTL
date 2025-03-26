@@ -1,12 +1,12 @@
 <template>
   <Form @submit="submitReader" :validation-schema="readerFormSchema">
-    <div class="form-group">
+    <div v-if="!readerLocal._id" class="form-group">
       <label for="TenDangNhap">Tài khoản</label>
       <Field name="TenDangNhap" id="TenDangNhap" type="text" class="form-control" v-model="readerLocal.TenDangNhap" />
       <ErrorMessage name="TenDangNhap" class="error-feedback" />
     </div>
 
-    <div class="form-group">
+    <div v-if="!readerLocal._id" class="form-group">
       <label for="Password">Mật khẩu</label>
       <Field name="Password" id="Password" type="password" class="form-control" v-model="readerLocal.Password" />
       <ErrorMessage name="Password" class="error-feedback" />

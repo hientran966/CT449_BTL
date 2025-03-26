@@ -21,29 +21,12 @@ export default {
   },
   methods: {
     async addReader(data) {
-      this.message = ""; // Xóa thông báo cũ
+      this.message = "";
       try {
-        // Đăng ký tài khoản trước
-        const newAccount = await AuthService.createAccount({
-          TenDangNhap: data.TenDangNhap,
-          Password: data.Password,
-        });
-
-        if (!newAccount || !newAccount._id) {
-          throw new Error("Không thể tạo tài khoản.");
-        }
-
-        // Gán ID tài khoản vào độc giả
-        const readerData = { ...data, TaiKhoan: newAccount._id };
-        delete readerData.TenDangNhap;
-        delete readerData.Password;
-
-        // Đăng ký độc giả
-        await ReaderService.create(readerData);
+        await ReaderService.create(data);
 
         this.message = "Đăng ký độc giả thành công!";
         
-        // Kiểm tra trạng thái đăng nhập và điều hướng
         setTimeout(() => {
           const isAuthenticated = !!localStorage.getItem("user");
           this.$router.push({ name: isAuthenticated ? "reader" : "login" });

@@ -14,6 +14,7 @@ exports.create = async (req, res, next) => {
             return next(new ApiError(404, "Reader ID does not exist"));
         }
         const book = await bookService.findById(req.body.MASACH);
+        console.log(book)
         if (!book) {
             return next(new ApiError(404, "Book ID does not exist"));
         }
@@ -39,7 +40,7 @@ exports.create = async (req, res, next) => {
 
         const document = await borrowBookService.create(req.body);
 
-        await bookService.update(req.body.MASACH, { $inc: { SOQUYEN: -1 } });
+        await bookService.decreaseQuantity(book._id);
 
         return res.send(document);
     } catch (error) {
@@ -95,6 +96,8 @@ exports.update = async (req, res, next) => {
         const bookService = new BookService(MongoDB.client);
         
         const borrow = await borrowService.findById(req.params.id);
+        const book = await bookService.findById(borrow.MASACH);
+        console.log(book);
         if (!borrow) {
             return next(new ApiError(404, "Borrow record not found"));
         }
@@ -102,7 +105,7 @@ exports.update = async (req, res, next) => {
         if (req.body.TRANGTHAI === "Đã Trả") {
             req.body.NGAYTRA = new Date().toISOString().split("T")[0];
 
-            await bookService.update(borrow.MASACH, { $inc: { SOQUYEN: 1 } });
+            await bookService.increaseQuantity(book._id);
         }
 
         const updatedBorrow = await borrowService.update(req.params.id, req.body);

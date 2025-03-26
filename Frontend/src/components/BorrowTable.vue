@@ -47,7 +47,7 @@ export default {
                 }
             }
             try {
-                await BorrowService.update(borrow._id, { TRANGTHAI: newStatus });
+                await BorrowService.update(borrow._id, {TRANGTHAI: newStatus, });
                 borrow.TRANGTHAI = newStatus;
             } catch (error) {
                 console.error("Lỗi khi cập nhật trạng thái:", error);

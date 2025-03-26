@@ -58,6 +58,19 @@ exports.findOne = async (req, res, next) => {
     }
 };
 
+exports.findByAccountId = async (req, res, next) => {
+    try {
+        const readerService = new ReaderService(MongoDB.client);
+        const document = await readerService.findByAccountId(req.params.accountId);
+        if (!document) {
+            return next(new ApiError(404, "Reader not found"));
+        }
+        return res.send(document);
+    } catch (error) {
+        return next(new ApiError(500, `Error retrieving reader with accountId=${req.params.accountId}`));
+    }
+};
+
 exports.update = async (req, res, next) => {
     if (Object.keys(req.body).length === 0) {
         return next(new ApiError(400, "Data to update can not be emty"));
@@ -80,11 +93,20 @@ exports.update = async (req, res, next) => {
 exports.delete = async (req, res, next) => {
     try {
         const readerService = new ReaderService(MongoDB.client);
-        const document = await readerService.delete(req.params.id);
-        if (!document) {
+        const authService = new AuthService(MongoDB.client);
+
+        const reader = await readerService.findById(req.params.id);
+        if (!reader) {
             return next(new ApiError(404, "Reader not found"));
         }
-        return res.send({message: "Reader was deleted successfully"});
+
+        await readerService.delete(req.params.id);
+
+        if (reader.TaiKhoan) {
+            await authService.delete(reader.TaiKhoan);
+        }
+
+        return res.send({ message: "Reader and associated account were deleted successfully" });
     } catch (error) {
         return next(
             new ApiError(500, `Could not delete reader with id=${req.params.id}`)

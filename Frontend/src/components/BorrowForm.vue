@@ -13,6 +13,9 @@
       <div class="p-1"><strong>Địa chỉ:</strong> {{ reader.DIACHI }}</div>
       <div class="p-1"><strong>Số điện thoại:</strong> {{ reader.DIENTHOAI }}</div>
     </div>
+    <div v-else>
+      <p class="text-danger">Không thể lấy thông tin độc giả. Vui lòng đăng nhập lại.</p>
+    </div>
 
     <div class="form-group">
       <label for="NGAYMUON">Ngày Mượn</label>
@@ -30,9 +33,7 @@
 <script>
 import * as yup from "yup";
 import { Form, Field, ErrorMessage } from "vee-validate";
-import ReaderService from "@/services/reader.service";
 import BookService from "@/services/book.service";
-import AuthService from "@/services/auth.service";
 
 export default {
   components: {
@@ -40,19 +41,15 @@ export default {
     Field,
     ErrorMessage,
   },
-  props: ["id"],
+  props: [
+    "id",
+    "reader"
+  ],
   data() {
     const today = new Date();
     const maxDate = new Date();
     maxDate.setDate(today.getDate() + 30);
 
-    const borrowFormSchema = yup.object().shape({
-      NGAYMUON: yup
-        .date()
-        .required("Vui lòng chọn ngày mượn.")
-        .min(today, "Không được chọn ngày trong quá khứ.")
-        .max(maxDate, "Ngày mượn không được vượt quá 30 ngày kể từ hôm nay."),
-    });
     return {
       borrowLocal: {
         MASACH: this.id,
@@ -60,29 +57,33 @@ export default {
         NGAYMUON: "",
       },
       bookTitle: "",
-      reader: null,
-      borrowFormSchema,
+      borrowFormSchema: yup.object().shape({
+        NGAYMUON: yup
+          .date()
+          .required("Vui lòng chọn ngày mượn.")
+          .min(today, "Không được chọn ngày trong quá khứ.")
+          .max(maxDate, "Ngày mượn không được vượt quá 30 ngày kể từ hôm nay."),
+      }),
     };
   },
   methods: {
-    submitBorrow() {
+    async submitBorrow() {
+      if (!this.reader) {
+        alert("Không tìm thấy thông tin độc giả.");
+        return;
+      }
       this.borrowLocal.MADOCGIA = this.reader._id;
       this.$emit("submit:borrow", this.borrowLocal);
     },
     async Cancel() {
       if (confirm("Bạn có chắc muốn thoát?")) {
-        this.$router.push({ name: "borrow" });
+        this.$router.push({ name: "book" });
       }
     },
   },
   async created() {
     const book = await BookService.get(this.id);
     this.bookTitle = book ? book.TENSACH : "Không xác định";
-
-    const user = await AuthService.getCurrentUser();
-    if (user) {
-        this.reader = await ReaderService.findByAccountId(user._id);
-    }
   }
 };
 </script>

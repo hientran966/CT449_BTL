@@ -25,7 +25,7 @@ export default {
     async addBook(data) {
       try {
         await bookService.create(data);
-        alert("Liên hệ được thêm mới thành công.");
+        alert("Sách được thêm mới thành công.");
         this.$router.push({ name: "book" });
       } catch (error) {
         console.log(error);

@@ -63,6 +63,26 @@ class BookService {
         return result;
     }
 
+    async increaseQuantity(id){
+        const result = await this.Book.findOneAndUpdate(
+            { _id: ObjectId.isValid(id) ? new ObjectId(id) : null },
+            { $inc: { SOQUYEN: 1 } },
+            { returnDocument: "after" }
+        );
+        console.log(result);
+        return result;
+    }
+
+    async decreaseQuantity(id){
+        const result = await this.Book.findOneAndUpdate(
+            { _id: ObjectId.isValid(id) ? new ObjectId(id) : null },
+            { $inc: { SOQUYEN: -1 } },
+            { returnDocument: "after" }
+        );
+        console.log(result);
+        return result;
+    }
+
     async delete(id) {
         return await this.Book.findOneAndDelete({
             _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
@@ -74,7 +94,6 @@ class BookService {
         const result = await this.Book.deleteMany({});
         return result.deletedCount;
     }
-
 }
 
 

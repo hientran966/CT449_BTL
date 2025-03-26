@@ -43,8 +43,12 @@
             <i class="fas fa-edit"></i> Hiệu chỉnh</span
           >
         </router-link>
-        <button v-else class="mt-2 btn btn-info">
-          <i class="fas fa-book-reader"></i> Mượn
+        <button 
+          v-else 
+          class="mt-2 badge badge-info btn btn-sm btn-primary"
+          @click="borrowBook"
+        >
+          <i class="fas fa-edit"></i> Mượn
         </button>
       </div>
     </div>
@@ -123,6 +127,16 @@ export default {
     },
     goToAddBook() {
       this.$router.push({ name: "book.add" });
+    },
+    borrowBook() {
+      if (this.activeBook?.SOQUYEN === 0) {
+        alert("Sách đã hết, không thể mượn.");
+      } else {
+        this.$router.push({
+          name: "borrow.add",
+          params: { id: this.activeBook._id },
+        });
+      }
     },
   },
   async mounted() {

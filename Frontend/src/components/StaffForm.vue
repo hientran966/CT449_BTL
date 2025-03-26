@@ -37,7 +37,7 @@
       <ErrorMessage name="DiaChi" class="error-feedback" />
     </div>
     <div class="form-group">
-      <label for="SoDienThoai">Địa chỉ</label>
+      <label for="SoDienThoai">Điện thoại</label>
 
       <Field
         name="SoDienThoai"

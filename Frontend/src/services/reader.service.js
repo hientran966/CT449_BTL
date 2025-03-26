@@ -28,6 +28,11 @@ class ReaderService {
     async delete(id) {
       return (await this.api.delete(`/${id}`)).data;
     }
+
+    async findByAccountId(accountId) {
+      return (await this.api.get(`/account/${accountId}`)).data;
+  }
+  
 }
 
 export default new ReaderService();

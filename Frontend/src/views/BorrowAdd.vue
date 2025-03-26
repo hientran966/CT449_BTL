@@ -3,15 +3,16 @@
     <h4>Đăng Ký Mượn Sách</h4>
     <borrowForm
       :id="id"
+      :reader="reader"
       @submit:borrow="addBorrow"
     />
-    <p>{{ message }}</p>
+    <p class="text-danger">{{ message }}</p>
   </div>
 </template>
+
 <script>
 import borrowForm from "@/components/BorrowForm.vue";
 import BorrowService from "@/services/borrow.service";
-import BookService from "@/services/book.service";
 import AuthService from "@/services/auth.service";
 import ReaderService from "@/services/reader.service";
 
@@ -26,32 +27,35 @@ export default {
     return {
       borrow: {},
       message: "",
-      readerId: "",
+      reader: this.reader,
     };
   },
   methods: {
     async getLoggedInReader() {
       try {
-        const user = await AuthService.getCurrentUser();
-        if (user) {
-          const reader = await ReaderService.findByAccountId(user._id);
-          if (reader) {
-            this.readerId = reader._id;
+          const user = await AuthService.getCurrentUser();
+          console.log("User:", user);
+          if (user) {
+              this.reader = await ReaderService.findByAccountId(user._id);
+              console.log("Reader:", this.reader);
           }
-        }
       } catch (error) {
-        console.error("Không thể lấy thông tin độc giả:", error);
+          console.error("Không thể lấy thông tin độc giả:", error);
       }
     },
     async addBorrow(data) {
       try {
-          data.MADOCGIA = this.readerId;
-          await BorrowService.create(data);
-          alert("Đăng ký thành công.");
-          this.$router.push({ name: "book" });
+        if (!this.reader) {
+          this.message = "Không tìm thấy thông tin độc giả. Vui lòng đăng nhập lại!";
+          return;
+        }
+        data.MADOCGIA = this.reader._id;
+        await BorrowService.create(data);
+        alert("Đăng ký thành công.");
+        this.$router.push({ name: "book" });
       } catch (error) {
-          this.message = "Lỗi khi đăng ký mượn sách. Vui lòng thử lại!";
-          console.error(error);
+        this.message = "Lỗi khi đăng ký mượn sách. Vui lòng thử lại!";
+        console.error(error);
       }
     }
   },
