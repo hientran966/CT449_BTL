@@ -1,21 +1,17 @@
 const { ObjectId } = require("mongodb");
 const bcrypt = require("bcrypt");
-const { create } = require("../controllers/auth.controller");
 
 class AuthService {
     constructor(client) {
         this.Auth = client.db().collection("TaiKhoan");
     }
 
-    async extractAuthData(payload) {
+    extractAuthData(payload) {
         const auth = {
             TenDangNhap: payload.TenDangNhap,
+            Password: payload.Password,
+            isStaff: payload.isStaff,
         };
-
-        if (payload.Password) {
-            const saltRounds = 10;
-            auth.Password = await bcrypt.hash(payload.Password, saltRounds);
-        }
 
         Object.keys(auth).forEach(
             (key) => auth[key] === undefined && delete auth[key]
@@ -29,28 +25,26 @@ class AuthService {
         if (existingAuth) {
             throw new Error("Tài khoản đã tồn tại");
         }
-    
+
         const hashedPassword = await bcrypt.hash(payload.Password, 10);
-    
         const auth = {
             TenDangNhap: payload.TenDangNhap,
             Password: hashedPassword,
             isStaff: payload.isStaff || false,
         };
-    
-        const result = await this.Auth.findOneAndUpdate(auth);
+
+        const result = await this.Auth.insertOne(auth);
         return result;
     }
-    
 
     async find(filter) {
-        const cursor = await this.Auth.find(filter, { projection: { Password: 0 } });
+        const cursor = await this.Auth.find(filter);
         return await cursor.toArray();
     }
 
-    async findByName(TenDangNhap) {
+    async findByName(TEN_DANG_NHAP) {
         return await this.find({
-            TenDangNhap: { $regex: new RegExp(TenDangNhap, "i") }
+            TenDangNhap: { $regex: new RegExp(TEN_DANG_NHAP, "i") },
         });
     }
 
@@ -64,11 +58,11 @@ class AuthService {
         const filter = {
             _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
         };
-        const update = await this.extractAuthData(payload);
+        const update = this.extractAuthData(payload);
         const result = await this.Auth.findOneAndUpdate(
             filter,
-            {$set: update},
-            {returnDocument: "after"}
+            { $set: update },
+            { returnDocument: "after" }
         );
         return result;
     }
@@ -77,16 +71,15 @@ class AuthService {
         return await this.Auth.findOneAndDelete({
             _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
         });
-        return result;
     }
 
-    async deleteAll(){
+    async deleteAll() {
         const result = await this.Auth.deleteMany({});
         return result.deletedCount;
     }
 
-    async comparePassword(inputPassword, storedHash) {
-        return await bcrypt.compare(inputPassword, storedHash);
+    async comparePassword(inputPassword, storedPassword) {
+        return await bcrypt.compare(inputPassword, storedPassword);
     }
 
     async login(TenDangNhap, Password) {
@@ -96,7 +89,6 @@ class AuthService {
         }
         return auth;
     }
-    
 }
 
 module.exports = AuthService;
