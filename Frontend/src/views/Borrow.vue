@@ -21,6 +21,8 @@
 import InputSearch from "@/components/InputSearch.vue";
 import BorrowService from "@/services/borrow.service";
 import BorrowTable from "@/components/BorrowTable.vue";
+import AuthService from "@/services/auth.service";
+import ReaderService from "@/services/reader.service";
 
 export default {
   components: {
@@ -31,20 +33,15 @@ export default {
     return {
       borrows: [],
       searchText: "",
+      currentUser: null,
+      readerId: null,
     };
   },
   computed: {
-    borrowStrings() {
-      return this.borrows.map((borrow) => {
-        const { MASACH, MADOCGIA, NGAYMUON, NGAYTRA } = borrow;
-        return [MASACH, MADOCGIA, NGAYMUON, NGAYTRA].join("");
-      });
-    },
     filtered() {
-      if (!this.searchText) return this.borrows;
-      return this.borrows.filter((_borrow, index) =>
-        this.borrowStrings[index].includes(this.searchText)
-      );
+      if (!this.currentUser) return [];
+      if (this.currentUser.isStaff) return this.borrows;
+      return this.borrows.filter(borrow => borrow.MADOCGIA === this.readerId);
     },
     filteredCount() {
       return this.filtered.length;
@@ -58,12 +55,21 @@ export default {
         console.log(error);
       }
     },
-    refreshList() {
-      this.retrieveBorrows();
+    async getCurrentUser() {
+      this.currentUser = await AuthService.getCurrentUser();
+      if (this.currentUser && !this.currentUser.isStaff) {
+        try {
+          const reader = await ReaderService.findByAccountId(this.currentUser._id);
+          this.readerId = reader ? reader._id : null;
+        } catch (error) {
+          console.log("Không tìm thấy thông tin độc giả:", error);
+        }
+      }
     },
   },
-  mounted() {
-    this.refreshList();
+  async mounted() {
+    await this.getCurrentUser();
+    this.retrieveBorrows();
   },
 };
 </script>

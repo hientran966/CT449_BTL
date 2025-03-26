@@ -7,12 +7,12 @@
           Sách <i class="fas fa-book"></i>
         </router-link>
       </div>
+      <div class="nav-item">
+        <router-link :to="{ name: 'borrow' }" class="nav-link">
+          Quản Lý <i class="fas fa-list"></i>
+        </router-link>
+      </div>
       <template v-if="isStaff">
-        <div class="nav-item">
-          <router-link :to="{ name: 'borrow' }" class="nav-link">
-            Quản Lý <i class="fas fa-list"></i>
-          </router-link>
-        </div>
         <div class="nav-item">
           <router-link :to="{ name: 'publisher' }" class="nav-link">
             Nhà Xuất Bản <i class="fas fa-address-book"></i>

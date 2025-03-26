@@ -31,7 +31,7 @@ class ReaderService {
 
     async findByAccountId(accountId) {
       return (await this.api.get(`/account/${accountId}`)).data;
-  }
+    }
   
 }
 
