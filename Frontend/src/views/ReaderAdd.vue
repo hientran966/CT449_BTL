@@ -42,7 +42,12 @@ export default {
         await ReaderService.create(readerData);
 
         this.message = "Đăng ký độc giả thành công!";
-        setTimeout(() => this.$router.push({ name: "reader" }), 1500);
+        
+        // Kiểm tra trạng thái đăng nhập và điều hướng
+        setTimeout(() => {
+          const isAuthenticated = !!localStorage.getItem("user");
+          this.$router.push({ name: isAuthenticated ? "reader" : "login" });
+        }, 1500);
       } catch (error) {
         console.error("Lỗi khi thêm độc giả:", error);
         this.message = `Có lỗi xảy ra: ${error.message}`;

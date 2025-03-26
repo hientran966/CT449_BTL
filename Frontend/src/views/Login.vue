@@ -33,7 +33,7 @@ export default {
         const user = await AuthService.login(loginData.TenDangNhap, loginData.Password);
         if (user) {
           localStorage.setItem("user", JSON.stringify(user));
-          this.$router.push({ name: "book" });
+          window.location.reload()
         } else {
           this.message = "Tên đăng nhập hoặc mật khẩu không đúng!";
         }

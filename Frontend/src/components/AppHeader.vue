@@ -7,26 +7,28 @@
           Sách <i class="fas fa-book"></i>
         </router-link>
       </div>
-      <div class="nav-item">
-        <router-link :to="{ name: 'borrow' }" class="nav-link">
-          Quản Lý <i class="fas fa-list"></i>
-        </router-link>
-      </div>
-      <div class="nav-item">
-        <router-link :to="{ name: 'publisher' }" class="nav-link">
-          Nhà Xuất Bản <i class="fas fa-address-book"></i>
-        </router-link>
-      </div>
-      <div class="nav-item">
-        <router-link :to="{ name: 'reader' }" class="nav-link">
-          Đọc Giả <i class="fas fa-user"></i>
-        </router-link>
-      </div>
-      <div class="nav-item">
-        <router-link :to="{ name: 'staff' }" class="nav-link">
-          Nhân Viên <i class="fas fa-users"></i>
-        </router-link>
-      </div>
+      <template v-if="isStaff">
+        <div class="nav-item">
+          <router-link :to="{ name: 'borrow' }" class="nav-link">
+            Quản Lý <i class="fas fa-list"></i>
+          </router-link>
+        </div>
+        <div class="nav-item">
+          <router-link :to="{ name: 'publisher' }" class="nav-link">
+            Nhà Xuất Bản <i class="fas fa-address-book"></i>
+          </router-link>
+        </div>
+        <div class="nav-item">
+          <router-link :to="{ name: 'reader' }" class="nav-link">
+            Đọc Giả <i class="fas fa-user"></i>
+          </router-link>
+        </div>
+        <div class="nav-item">
+          <router-link :to="{ name: 'staff' }" class="nav-link">
+            Nhân Viên <i class="fas fa-users"></i>
+          </router-link>
+        </div>
+      </template>
     </div>
     <div class="ml-auto navbar-nav">
       <div class="nav-item" v-if="isLogin">
@@ -41,6 +43,7 @@ export default {
   data() {
     return {
       isLogin: false,
+      isStaff: false,
     };
   },
   created() {
@@ -48,12 +51,14 @@ export default {
   },
   methods: {
     checkLogin() {
-      const user = localStorage.getItem("user");
+      const user = JSON.parse(localStorage.getItem("user"));
       this.isLogin = !!user;
+      this.isStaff = user?.isStaff || false;
     },
     logout() {
       localStorage.removeItem("user");
       this.isLogin = false;
+      this.isStaff = false;
       this.$router.push({ name: "login" });
     },
   },

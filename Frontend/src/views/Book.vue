@@ -18,10 +18,10 @@
         <button class="btn btn-sm btn-primary" @click="refreshList()">
           <i class="fas fa-redo"></i> Làm mới
         </button>
-        <button class="btn btn-sm btn-success" @click="goToAddBook">
+        <button  v-if="isStaff" class="btn btn-sm btn-success" @click="goToAddBook">
           <i class="fas fa-plus"></i> Thêm mới
         </button>
-        <button class="btn btn-sm btn-danger" @click="removeAllBooks">
+        <button  v-if="isStaff" class="btn btn-sm btn-danger" @click="removeAllBooks">
           <i class="fas fa-trash"></i> Xóa tất cả
         </button>
       </div>
@@ -33,6 +33,7 @@
         </h4>
         <BookCard :book="activeBook" />
         <router-link
+          v-if="isStaff"
           :to="{
             name: 'book.edit',
             params: { id: activeBook._id },
@@ -42,6 +43,9 @@
             <i class="fas fa-edit"></i> Hiệu chỉnh</span
           >
         </router-link>
+        <button v-else class="mt-2 btn btn-info">
+          <i class="fas fa-book-reader"></i> Mượn
+        </button>
       </div>
     </div>
   </div>
@@ -52,6 +56,7 @@ import BookCard from "@/components/BookCard.vue";
 import InputSearch from "@/components/InputSearch.vue";
 import BookList from "@/components/BookList.vue";
 import BookService from "@/services/book.service";
+import AuthService from "@/services/auth.service";
 
 export default {
   components: {
@@ -65,6 +70,7 @@ export default {
       activeIndex: -1,
       searchText: "",
       isLogin: false,
+      isStaff: false,
     };
   },
   watch: {
@@ -119,8 +125,14 @@ export default {
       this.$router.push({ name: "book.add" });
     },
   },
-  mounted() {
+  async mounted() {
     this.refreshList();
+    try {
+      const user = await AuthService.getCurrentUser();
+      this.isStaff = user?.isStaff || false;
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
   },
 };
 </script>
