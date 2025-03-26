@@ -58,7 +58,13 @@ const routes = [
   {
     path: "/staff",
     name: "staff",
-    component: () => import("@/views/NotFound.vue"),
+    component: () => import("@/views/Staff.vue"),
+  },
+  {
+    path: "/staff/:id",
+    name: "staff.edit",
+    component: () => import("@/views/StaffEdit.vue"),
+    props: true,
   },
   {
     path: "/borrow",

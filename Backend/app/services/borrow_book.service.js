@@ -12,6 +12,7 @@ class BorrowBookService {
             MASACH: payload.MASACH,
             NGAYMUON: payload.NGAYMUON,
             NGAYTRA: payload.NGAYTRA,
+            TRANGTHAI: payload.TRANGTHAI || "Chưa Duyệt",
         };
 
         Object.keys(borrowBook).forEach(
