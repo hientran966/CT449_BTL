@@ -1,5 +1,7 @@
 const { ObjectId } = require("mongodb");
 const { create } = require("../controllers/reader.controller");
+const MongoDB = require("../utils/mongodb.util"); 
+const AuthService = require("../services/auth.service");
 
 class ReaderService {
     constructor(client) {
@@ -14,6 +16,7 @@ class ReaderService {
             PHAI: payload.PHAI,
             DIACHI: payload.DIACHI,
             DIENTHOAI: payload.DIENTHOAI,
+            TaiKhoan: payload.TaiKhoan,
         };
 
         Object.keys(reader).forEach(
@@ -24,14 +27,21 @@ class ReaderService {
     }
 
     async create(payload) {
-        const reader = this.extractReaderData(payload);
-        const result = await this.Reader.findOneAndUpdate (
+        const authService = new AuthService(MongoDB.client);
+        const username = payload.TenDangNhap || `user_${Date.now()}`;
+        const auth = await authService.create({
+            TenDangNhap: username,
+            Password: payload.Password || "defaultPassword",
+        });
+        
+        payload.TaiKhoan = auth._id;
+        delete payload.Password;
+        const reader = await this.extractReaderData(payload);
+        return await this.Reader.findOneAndUpdate(
             reader,
             { $set: reader },
-            {returnDocument: "after", upsert: true}
+            { returnDocument: "after", upsert: true }
         );
-        
-        return result;
     }
 
     async find(filter) {
@@ -67,14 +77,12 @@ class ReaderService {
         return await this.Reader.findOneAndDelete({
             _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
         });
-        return result;
     }
 
     async deleteAll(){
         const result = await this.Reader.deleteMany({});
         return result.deletedCount;
     }
-
 }
 
 

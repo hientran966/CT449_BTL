@@ -12,6 +12,9 @@
 import borrowForm from "@/components/BorrowForm.vue";
 import BorrowService from "@/services/borrow.service";
 import BookService from "@/services/book.service";
+import AuthService from "@/services/auth.service";
+import ReaderService from "@/services/reader.service";
+
 export default {
   components: {
     borrowForm,
@@ -23,33 +26,37 @@ export default {
     return {
       borrow: {},
       message: "",
+      readerId: "",
     };
   },
   methods: {
-    async getBook(id) {
+    async getLoggedInReader() {
       try {
-        this.book = await BookService.get(id);
+        const user = await AuthService.getCurrentUser();
+        if (user) {
+          const reader = await ReaderService.findByAccountId(user._id);
+          if (reader) {
+            this.readerId = reader._id;
+          }
+        }
       } catch (error) {
-        console.log(error);
-        this.$router.push({
-          name: "notfound",
-          params: {
-            pathMatch: this.$route.path.split("/").slice(1),
-          },
-          query: this.$route.query,
-          hash: this.$route.hash,
-        });
+        console.error("Không thể lấy thông tin độc giả:", error);
       }
     },
     async addBorrow(data) {
       try {
-        await BorrowService.create(data);
-        alert("Đăng ký thành công.");
-        this.$router.push({ name: "book" });
+          data.MADOCGIA = this.readerId;
+          await BorrowService.create(data);
+          alert("Đăng ký thành công.");
+          this.$router.push({ name: "book" });
       } catch (error) {
-        console.log(error);
+          this.message = "Lỗi khi đăng ký mượn sách. Vui lòng thử lại!";
+          console.error(error);
       }
-    },
+    }
+  },
+  async created() {
+    await this.getLoggedInReader();
   },
 };
 </script>

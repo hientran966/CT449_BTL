@@ -1,6 +1,8 @@
 const { ObjectId } = require("mongodb");
 const bcrypt = require("bcrypt");
 const { create } = require("../controllers/staff.controller");
+const MongoDB = require("../utils/mongodb.util"); 
+const AuthService = require("../services/auth.service");
 
 class StaffService {
     constructor(client) {
@@ -13,13 +15,8 @@ class StaffService {
             ChucVu: payload.ChucVu,
             DiaChi: payload.DiaChi,
             SoDienThoai: payload.SoDienThoai,
+            TaiKhoan: payload.TaiKhoan,
         };
-
-        if (payload.Password) {
-            const saltRounds = 10;
-            staff.Password = await bcrypt.hash(payload.Password, saltRounds);
-        }
-
         Object.keys(staff).forEach(
             (key) => staff[key] === undefined && delete staff[key]
         );
@@ -28,14 +25,22 @@ class StaffService {
     }
 
     async create(payload) {
+        const authService = new AuthService(MongoDB.client);
+        const username = payload.TenDangNhap || `user_${Date.now()}`;
+        const auth = await authService.create({
+            TenDangNhap: username,
+            Password: payload.Password || "defaultPassword",
+            isStaff: true,
+        });
+        
+        payload.TaiKhoan = auth._id;
+        delete payload.Password;
         const staff = await this.extractStaffData(payload);
-        const result = await this.Staff.findOneAndUpdate (
+        return await this.Staff.findOneAndUpdate(
             staff,
             { $set: staff },
-            {returnDocument: "after", upsert: true}
+            { returnDocument: "after", upsert: true }
         );
-        
-        return result;
     }
 
     async find(filter) {
@@ -78,11 +83,6 @@ class StaffService {
         const result = await this.Staff.deleteMany({});
         return result.deletedCount;
     }
-
-    async comparePassword(inputPassword, storedHash) {
-        return await bcrypt.compare(inputPassword, storedHash);
-    }
-    
 }
 
 

@@ -47,7 +47,18 @@ const routes = [
   {
     path: "/reader",
     name: "reader",
-    component: () => import("@/views/NotFound.vue"),
+    component: () => import("@/views/Reader.vue"),
+  },
+  {
+    path: "/reader/:id",
+    name: "reader.edit",
+    component: () => import("@/views/ReaderEdit.vue"),
+    props: true,
+  },
+  {
+    path: "/reader/add",
+    name: "reader.add",
+    component: () => import("@/views/ReaderAdd.vue"),
   },
 
   //Nhân viên

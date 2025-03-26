@@ -5,12 +5,12 @@
     </div>
     <div class="mt-3 col-md-6">
       <h4>
-        Nhà Xuất Bản
-        <i class="fas fa-address-book"></i>
+        Đọc Giả
+        <i class="fas fa-user"></i>
       </h4>
-      <PublisherList
-        v-if="filteredPublishersCount > 0"
-        :publishers="filteredPublishers"
+      <ReaderList
+        v-if="filteredReadersCount > 0"
+        :readers="filteredReaders"
         v-model:activeIndex="activeIndex"
       />
       <p v-else>Không có dữ liệu.</p>
@@ -18,22 +18,22 @@
         <button class="btn btn-sm btn-primary" @click="refreshList()">
           <i class="fas fa-redo"></i> Làm mới
         </button>
-        <button class="btn btn-sm btn-success" @click="goToAddPublisher">
+        <button class="btn btn-sm btn-success" @click="goToAddReader">
           <i class="fas fa-plus"></i> Thêm mới
         </button>
-        <button class="btn btn-sm btn-danger" @click="removeAllPublishers">
+        <button class="btn btn-sm btn-danger" @click="removeAllReaders">
           <i class="fas fa-trash"></i> Xóa tất cả
         </button>
       </div>
     </div>
     <div class="mt-3 col-md-6">
-      <div v-if="activePublisher">
+      <div v-if="activeReader">
         <h4>Chi tiết</h4>
-        <PublisherCard :publisher="activePublisher" />
+        <ReaderCard :reader="activeReader" />
         <router-link
           :to="{
-            name: 'publisher.edit',
-            params: { id: activePublisher._id },
+            name: 'reader.edit',
+            params: { id: activeReader._id },
           }"
         >
           <span class="mt-2 badge badge-warning">
@@ -46,20 +46,20 @@
 </template>
 
 <script>
-import PublisherCard from "@/components/PublisherCard.vue";
+import ReaderCard from "@/components/ReaderCard.vue";
 import InputSearch from "@/components/InputSearch.vue";
-import PublisherList from "@/components/PublisherList.vue";
-import PublisherService from "@/services/publisher.service";
+import ReaderList from "@/components/ReaderList.vue";
+import ReaderService from "@/services/reader.service";
 
 export default {
   components: {
-    PublisherCard,
+    ReaderCard,
     InputSearch,
-    PublisherList,
+    ReaderList,
   },
   data() {
     return {
-      publishers: [],
+      readers: [],
       activeIndex: -1,
       searchText: "",
       isLogin: false,
@@ -71,51 +71,51 @@ export default {
     },
   },
   computed: {
-    publisherStrings() {
-      return this.publishers.map((publisher) => {
-        const { TENNXB, DIACHI } =
-          publisher;
-        return [TENNXB, DIACHI].join("");
+    readerStrings() {
+      return this.readers.map((reader) => {
+        const { HOLOT, TEN, NGAYSINH, PHAI, DIACHI, DIENTHOAI } =
+          reader;
+        return [HOLOT, TEN, NGAYSINH, PHAI, DIACHI, DIENTHOAI].join("");
       });
     },
-    filteredPublishers() {
-      if (!this.searchText) return this.publishers;
-      return this.publishers.filter((_publisher, index) =>
-        this.publisherStrings[index].includes(this.searchText)
+    filteredReaders() {
+      if (!this.searchText) return this.readers;
+      return this.readers.filter((_reader, index) =>
+        this.readerStrings[index].includes(this.searchText)
       );
     },
-    activePublisher() {
+    activeReader() {
       if (this.activeIndex < 0) return null;
-      return this.filteredPublishers[this.activeIndex];
+      return this.filteredReaders[this.activeIndex];
     },
-    filteredPublishersCount() {
-      return this.filteredPublishers.length;
+    filteredReadersCount() {
+      return this.filteredReaders.length;
     },
   },
   methods: {
-    async retrievePublishers() {
+    async retrievereaders() {
       try {
-        this.publishers = await PublisherService.getAll();
+        this.readers = await ReaderService.getAll();
       } catch (error) {
         console.log(error);
       }
     },
     refreshList() {
-      this.retrievePublishers();
+      this.retrievereaders();
       this.activeIndex = -1;
     },
-    async removeAllPublishers() {
-      if (confirm("Bạn muốn xóa tất cả nhà xuất bản?")) {
+    async removeAllReaders() {
+      if (confirm("Bạn muốn xóa tất cả đọc giả?")) {
         try {
-          await PublisherService.deleteAll();
+          await ReaderService.deleteAll();
           this.refreshList();
         } catch (error) {
           console.log(error);
         }
       }
     },
-    goToAddPublisher() {
-      this.$router.push({ name: "publisher.add" });
+    goToAddReader() {
+      this.$router.push({ name: "reader.add" });
     },
   },
   mounted() {

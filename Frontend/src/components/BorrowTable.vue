@@ -64,7 +64,7 @@
                 <td>{{ getReaderName(borrow.MADOCGIA) }}</td>
                 <td>{{ borrow.NGAYMUON }}</td>
                 <td>{{ borrow.NGAYTRA }}</td>
-                <td class="text-center">
+                <td class="text-center justify-content-around align-items-center">
                     <a href="#" class="btn btn-warning">Sửa</a>
                     <form action="#" style="display: inline-block;" class="delete-form" method="post">
                         <input type="hidden" value="borrow._id" name="id">

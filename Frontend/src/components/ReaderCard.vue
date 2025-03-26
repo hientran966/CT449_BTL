@@ -2,7 +2,7 @@
     <div>
         <div class="p-1">
             <strong>Tên:</strong>
-            {{ reader.HOLOT }}{{ reader.TEN }}
+            {{ fullName }}
         </div>
         <div class="p-1">
             <strong>Ngày sinh:</strong>
@@ -10,7 +10,7 @@
         </div>
         <div class="p-1">
             <strong>Giới tính:</strong>
-            {{ reader.PHAI }} == 1 ? 'Nam' : 'Nữ'
+            {{ gender }}
         </div>
         <div class="p-1">
             <strong>Địa chỉ:</strong>
@@ -24,9 +24,17 @@
 </template>
 
 <script>
-    export default {
-        props: {
+export default {
+    props: {
         reader: { type: Object, required: true },
+    },
+    computed: {
+        gender() {
+            return this.reader.GIOITINH === 1 ? "Nam" : "Nữ";
         },
-    };
+        fullName() {
+            return `${this.reader.HOLOT} ${this.reader.TEN}`;
+        }
+    }
+};
 </script>

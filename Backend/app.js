@@ -20,6 +20,7 @@ app.use("/api/publishers", publisherRouter);
 app.use("/api/readers", readerRouter);
 app.use("/api/staffs", staffRouter);
 app.use("/api/borrow", borrowBookRouter);
+app.use("/api/auth", require("./app/routes/auth.route"));
 
 //handle 404
 app.use((req, res, next) => {

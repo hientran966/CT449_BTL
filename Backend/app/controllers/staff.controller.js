@@ -1,5 +1,6 @@
 const ApiError = require("../api-error");
 const StaffService = require("../services/staff.service");
+const AuthService = require("../services/auth.service");
 const MongoDB = require("../utils/mongodb.util");
 
 exports.create = async (req, res, next) => {
@@ -12,6 +13,7 @@ exports.create = async (req, res, next) => {
         const document = await staffService.create(req.body);
         return res.send(document);
     } catch (error) {
+        console.error(error);
         return next(
             new ApiError(500, "An error occurred while creating the staff")
         );
@@ -101,5 +103,15 @@ exports.deleteAll = async (_req, res, next) => {
         return next(
             new ApiError(500, "An error occurred while removing all staffs")
         );
+    }
+};
+
+exports.login = async (req, res, next) => {
+    try {
+        const authService = new AuthService(MongoDB.client);
+        const auth = await authService.login(req.body.TenDangNhap, req.body.Password);
+        res.send(auth);
+    } catch (error) {
+        next(new ApiError(401, "Login failed"));
     }
 };

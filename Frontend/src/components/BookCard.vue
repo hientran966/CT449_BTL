@@ -35,15 +35,15 @@ import PublisherService from "@/services/publisher.service";
             book: { type: Object, required: true },
         },
         data() {
-        return {
-            publisherName: ""
-        };
-    },
-    async created() {
-        if (this.book.MANXB) {
-            const publisher = await PublisherService.get(this.book.MANXB);
-            this.publisherName = publisher ? publisher.TENNXB : "Không xác định";
+            return {
+                publisherName: ""
+            };
+        },
+        async created() {
+            if (this.book.MANXB) {
+                const publisher = await PublisherService.get(this.book.MANXB);
+                this.publisherName = publisher ? publisher.TENNXB : "Không xác định";
+            }
         }
-    }
-};
+    };
 </script>

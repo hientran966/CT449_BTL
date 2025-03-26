@@ -3,10 +3,10 @@
     <div class="col-md-10">
       <InputSearch v-model="searchText" />
     </div>
-    <div class="mt-3 col-md-6">
+    <div class="mt-3 col-md-12">
       <h4>
         Quản lý mượn sách
-        <i class="fas fa-borrow"></i>
+        <i class="fas fa-list"></i>
       </h4>
       <BorrowTable
         v-if="filteredCount > 0"
