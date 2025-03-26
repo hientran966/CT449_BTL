@@ -1,7 +1,7 @@
 import createApiClient from "./api.service";
 
 class AuthService {
-    constructor(baseUrl = "/api/account") {
+    constructor(baseUrl = "/api/auth") {
         this.api = createApiClient(baseUrl);
     }
 

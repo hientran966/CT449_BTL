@@ -18,6 +18,12 @@
         <button class="btn btn-sm btn-primary" @click="refreshList()">
           <i class="fas fa-redo"></i> Làm mới
         </button>
+        <button class="btn btn-sm btn-success" @click="goToAddBook">
+          <i class="fas fa-plus"></i> Thêm mới
+        </button>
+        <button class="btn btn-sm btn-danger" @click="removeAllBooks">
+          <i class="fas fa-trash"></i> Xóa tất cả
+        </button>
       </div>
     </div>
     <div class="mt-3 col-md-6">
@@ -28,12 +34,12 @@
         <BookCard :book="activeBook" />
         <router-link
           :to="{
-            name: 'borrow.add',
+            name: 'book.edit',
             params: { id: activeBook._id },
           }"
         >
           <span class="mt-2 badge badge-warning">
-            <i class="fas fa-add"></i> Mượn</span
+            <i class="fas fa-edit"></i> Hiệu chỉnh</span
           >
         </router-link>
       </div>
@@ -58,6 +64,7 @@ export default {
       books: [],
       activeIndex: -1,
       searchText: "",
+      isLogin: false,
     };
   },
   watch: {

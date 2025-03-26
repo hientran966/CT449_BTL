@@ -9,68 +9,65 @@ class AuthService {
     extractAuthData(payload) {
         const auth = {
             TenDangNhap: payload.TenDangNhap,
-            Password: payload.Password,
-            isStaff: payload.isStaff,
+            isStaff: payload.isStaff ?? false,
         };
 
-        Object.keys(auth).forEach(
-            (key) => auth[key] === undefined && delete auth[key]
-        );
+        Object.keys(auth).forEach((key) => {
+            if (auth[key] === undefined) delete auth[key];
+        });
 
         return auth;
     }
 
     async create(payload) {
         const existingAuth = await this.Auth.findOne({ TenDangNhap: payload.TenDangNhap });
-        if (existingAuth) {
-            throw new Error("Tài khoản đã tồn tại");
-        }
+        if (existingAuth) throw new Error("Tài khoản đã tồn tại");
 
         const hashedPassword = await bcrypt.hash(payload.Password, 10);
         const auth = {
-            TenDangNhap: payload.TenDangNhap,
+            ...this.extractAuthData(payload),
             Password: hashedPassword,
-            isStaff: payload.isStaff || false,
         };
 
         const result = await this.Auth.insertOne(auth);
-        return result;
+        return { _id: result.insertedId, TenDangNhap: auth.TenDangNhap, isStaff: auth.isStaff };
     }
 
     async find(filter) {
-        const cursor = await this.Auth.find(filter);
-        return await cursor.toArray();
+        return await this.Auth.find(filter).toArray();
     }
 
-    async findByName(TEN_DANG_NHAP) {
+    async findByName(TenDangNhap) {
         return await this.find({
-            TenDangNhap: { $regex: new RegExp(TEN_DANG_NHAP, "i") },
+            TenDangNhap: { $regex: new RegExp(TenDangNhap, "i") },
         });
     }
 
     async findById(id) {
-        return await this.Auth.findOne({
-            _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
-        });
+        if (!ObjectId.isValid(id)) return null;
+        return await this.Auth.findOne({ _id: new ObjectId(id) });
     }
 
     async update(id, payload) {
-        const filter = {
-            _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
-        };
+        if (!ObjectId.isValid(id)) return null;
+
+        const filter = { _id: new ObjectId(id) };
         const update = this.extractAuthData(payload);
-        const result = await this.Auth.findOneAndUpdate(
+
+        if (payload.Password) {
+            update.Password = await bcrypt.hash(payload.Password, 10);
+        }
+
+        return await this.Auth.findOneAndUpdate(
             filter,
             { $set: update },
             { returnDocument: "after" }
         );
-        return result;
     }
 
     async delete(id) {
-        return await this.Auth.findOneAndDelete({
-            _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
-        });
+        if (!ObjectId.isValid(id)) return null;
+        return await this.Auth.findOneAndDelete({ _id: new ObjectId(id) });
     }
 
     async deleteAll() {
@@ -83,11 +80,12 @@ class AuthService {
     }
 
     async login(TenDangNhap, Password) {
-        const auth = await this.Auth.findOne({ TenDangNhap: TenDangNhap });
+        const auth = await this.Auth.findOne({ TenDangNhap });
         if (!auth || !(await this.comparePassword(Password, auth.Password))) {
             throw new Error("Invalid credentials");
         }
-        return auth;
+
+        return { _id: auth._id, TenDangNhap: auth.TenDangNhap, isStaff: auth.isStaff };
     }
 }
 

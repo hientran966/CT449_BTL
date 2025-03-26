@@ -40,7 +40,7 @@ export default {
   },
   emits: ["submit:login"],
   props: {
-    login: { type: Object, required: true },
+    loginInfo: { type: Object, required: true },
   },
   data() {
     const loginFormSchema = yup.object().shape({
@@ -54,7 +54,7 @@ export default {
         .max(16, "Mật khẩu có nhiều nhất 16 ký tự."),
     });
     return {
-      loginLocal: this.login,
+      loginLocal: this.loginInfo,
       loginFormSchema,
     };
   },

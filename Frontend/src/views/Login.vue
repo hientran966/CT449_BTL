@@ -1,12 +1,12 @@
 <template>
-  <div v-if="loginInfo" class="page">
+  <div class="page">
     <h4>Đăng Nhập</h4>
     <LoginForm
       :loginInfo="loginInfo"
       @submit:login="login"
     />
     <p class="register-link">
-      Nếu chưa có tài khoản, <router-link :to="{ name: 'register' }">đăng ký ngay</router-link>.
+      Nếu chưa có tài khoản, <router-link :to="{ name: 'reader.add' }">đăng ký ngay</router-link>.
     </p>
     <p>{{ message }}</p>
   </div>
@@ -18,12 +18,12 @@ export default {
   components: {
     LoginForm,
   },
-  props: {
-    id: { type: String, required: true },
-  },
   data() {
     return {
-      loginInfo: {},
+      loginInfo: {
+        TenDangNhap: "",
+        Password: "",
+      },
       message: "",
     };
   },
@@ -38,10 +38,10 @@ export default {
           this.message = "Tên đăng nhập hoặc mật khẩu không đúng!";
         }
       } catch (error) {
-        this.message = "Lỗi khi đăng nhập. Vui lòng thử lại!";
+        this.message = error.response?.data?.message || "Lỗi khi đăng nhập. Vui lòng thử lại!";
         console.error("Lỗi đăng nhập:", error);
       }
-    },
+    }
   },
 };
 </script>

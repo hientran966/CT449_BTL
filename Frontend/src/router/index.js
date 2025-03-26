@@ -1,17 +1,16 @@
 import { createWebHistory, createRouter } from "vue-router";
-import Book from "@/views/Book.vue";
+import Login from "@/views/Login.vue";
 
 const routes = [
-  //Sách
   {
     path: "/",
-    name: "book",
-    component: Book,
+    name: "login",
+    component: Login,
   },
   {
     path: "/books",
-    name: "adminbook",
-    component: () => import("@/views/AdminBook.vue"),
+    name: "book",
+    component: () => import("@/views/Book.vue"),
   },
   {
     path: "/books/:id",
@@ -24,8 +23,6 @@ const routes = [
     name: "book.add",
     component: () => import("@/views/BookAdd.vue"),
   },
-
-  //Nhà xuất bản
   {
     path: "/publisher",
     name: "publisher",
@@ -42,8 +39,6 @@ const routes = [
     name: "publisher.add",
     component: () => import("@/views/PublisherAdd.vue"),
   },
-
-  //Đọc giả
   {
     path: "/reader",
     name: "reader",
@@ -60,15 +55,11 @@ const routes = [
     name: "reader.add",
     component: () => import("@/views/ReaderAdd.vue"),
   },
-
-  //Nhân viên
   {
     path: "/staff",
     name: "staff",
     component: () => import("@/views/NotFound.vue"),
   },
-
-  //Mượn sách
   {
     path: "/borrow",
     name: "borrow",
@@ -81,8 +72,6 @@ const routes = [
     component: () => import("@/views/BorrowAdd.vue"),
     props: true,
   },
-
-  //Not Found
   {
     path: "/:pathMatch(.*)*",
     name: "notfound",
@@ -93,6 +82,16 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  const isAuthenticated = !!localStorage.getItem("user");
+
+  if (to.name === "login" && isAuthenticated) {
+    next({ name: "book" });
+  } else {
+    next();
+  }
 });
 
 export default router;
