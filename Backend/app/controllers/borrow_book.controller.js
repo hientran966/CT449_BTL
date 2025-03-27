@@ -14,7 +14,6 @@ exports.create = async (req, res, next) => {
             return next(new ApiError(404, "Reader ID does not exist"));
         }
         const book = await bookService.findById(req.body.MASACH);
-        console.log(book)
         if (!book) {
             return next(new ApiError(404, "Book ID does not exist"));
         }
@@ -97,7 +96,6 @@ exports.update = async (req, res, next) => {
         
         const borrow = await borrowService.findById(req.params.id);
         const book = await bookService.findById(borrow.MASACH);
-        console.log(book);
         if (!borrow) {
             return next(new ApiError(404, "Borrow record not found"));
         }

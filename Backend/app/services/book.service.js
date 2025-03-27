@@ -69,7 +69,6 @@ class BookService {
             { $inc: { SOQUYEN: 1 } },
             { returnDocument: "after" }
         );
-        console.log(result);
         return result;
     }
 
@@ -79,7 +78,6 @@ class BookService {
             { $inc: { SOQUYEN: -1 } },
             { returnDocument: "after" }
         );
-        console.log(result);
         return result;
     }
 

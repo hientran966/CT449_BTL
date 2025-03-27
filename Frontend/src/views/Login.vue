@@ -45,3 +45,35 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-size: cover;
+  text-align: center;
+  padding: 20px;
+}
+
+h4 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #000000;
+}
+
+.register-link a {
+  color: #ff0000;
+  text-decoration: none;
+}
+
+.register-link a:hover {
+  text-decoration: underline;
+}
+
+.message {
+  color: red;
+  margin-top: 10px;
+}
+</style>
