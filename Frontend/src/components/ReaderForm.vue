@@ -1,54 +1,66 @@
 <template>
   <Form @submit="submitReader" :validation-schema="readerFormSchema">
-    <div v-if="!readerLocal._id" class="form-group">
-      <label for="TenDangNhap">Tài khoản</label>
-      <Field name="TenDangNhap" id="TenDangNhap" type="text" class="form-control" v-model="readerLocal.TenDangNhap" />
-      <ErrorMessage name="TenDangNhap" class="error-feedback" />
-    </div>
+    <div class="row" :class="{'row': !readerLocal._id, 'd-flex flex-column': readerLocal._id}">
+      <div v-if="!readerLocal._id" class="col-md-6">
+        <div class="form-group">
+          <label for="TenDangNhap">Tài khoản</label>
+          <Field name="TenDangNhap" id="TenDangNhap" type="text" class="form-control" v-model="readerLocal.TenDangNhap" />
+          <ErrorMessage name="TenDangNhap" class="error-feedback" />
+        </div>
 
-    <div v-if="!readerLocal._id" class="form-group">
-      <label for="Password">Mật khẩu</label>
-      <Field name="Password" id="Password" type="password" class="form-control" v-model="readerLocal.Password" />
-      <ErrorMessage name="Password" class="error-feedback" />
-    </div>
+        <div class="form-group">
+          <label for="Password">Mật khẩu</label>
+          <Field name="Password" id="Password" type="password" class="form-control" v-model="readerLocal.Password" />
+          <ErrorMessage name="Password" class="error-feedback" />
+        </div>
 
-    <div class="form-group">
-      <label for="HOLOT">Họ</label>
-      <Field name="HOLOT" id="HOLOT" type="text" class="form-control" v-model="readerLocal.HOLOT" />
-      <ErrorMessage name="HOLOT" class="error-feedback" />
-    </div>
+        <div class="form-group">
+          <label for="Password2">Nhập lại mật khẩu</label>
+          <Field name="Password2" id="Password2" type="password" class="form-control"/>
+          <ErrorMessage name="Password2" class="error-feedback" />
+        </div>
+      </div>
 
-    <div class="form-group">
-      <label for="TEN">Tên</label>
-      <Field name="TEN" id="TEN" type="text" class="form-control" v-model="readerLocal.TEN" />
-      <ErrorMessage name="TEN" class="error-feedback" />
-    </div>
+      <div :class="{'col-md-6': !readerLocal._id, 'col-md-12': readerLocal._id}">
+        <div class="form-group">
+          <label for="HOLOT">Họ</label>
+          <Field name="HOLOT" id="HOLOT" type="text" class="form-control" v-model="readerLocal.HOLOT" />
+          <ErrorMessage name="HOLOT" class="error-feedback" />
+        </div>
 
-    <div class="form-group">
-      <label for="NGAYSINH">Ngày sinh</label>
-      <Field name="NGAYSINH" id="NGAYSINH" type="date" class="form-control" v-model="readerLocal.NGAYSINH" />
-      <ErrorMessage name="NGAYSINH" class="error-feedback" />
-    </div>
+        <div class="form-group">
+          <label for="TEN">Tên</label>
+          <Field name="TEN" id="TEN" type="text" class="form-control" v-model="readerLocal.TEN" />
+          <ErrorMessage name="TEN" class="error-feedback" />
+        </div>
 
-    <div class="form-group">
-      <label for="PHAI">Giới tính</label>
-      <select id="PHAI" v-model="readerLocal.PHAI" class="form-control mb-2">
-        <option :value="1">Nam</option>
-        <option :value="0">Nữ</option>
-      </select>
-      <ErrorMessage name="PHAI" class="error-feedback" />
-    </div>
+        <div class="form-group">
+          <label for="NGAYSINH">Ngày sinh</label>
+          <Field name="NGAYSINH" id="NGAYSINH" type="date" class="form-control" v-model="readerLocal.NGAYSINH" />
+          <ErrorMessage name="NGAYSINH" class="error-feedback" />
+        </div>
 
-    <div class="form-group">
-      <label for="DIACHI">Địa chỉ</label>
-      <Field name="DIACHI" id="DIACHI" type="text" class="form-control" v-model="readerLocal.DIACHI" />
-      <ErrorMessage name="DIACHI" class="error-feedback" />
-    </div>
+        <div class="form-group">
+          <label for="PHAI">Giới tính</label>
+          <select id="PHAI" v-model="readerLocal.PHAI" class="form-control mb-2">
+            <option :value="1">Nam</option>
+            <option :value="0">Nữ</option>
+          </select>
+          <ErrorMessage name="PHAI" class="error-feedback" />
+        </div>
 
-    <div class="form-group">
-      <label for="DIENTHOAI">Số điện thoại</label>
-      <Field name="DIENTHOAI" id="DIENTHOAI" type="text" class="form-control" v-model="readerLocal.DIENTHOAI" />
-      <ErrorMessage name="DIENTHOAI" class="error-feedback" />
+        <div class="form-group">
+          <label for="DIACHI">Địa chỉ</label>
+          <Field name="DIACHI" id="DIACHI" type="text" class="form-control" v-model="readerLocal.DIACHI" />
+          <ErrorMessage name="DIACHI" class="error-feedback" />
+        </div>
+
+        <div class="form-group">
+          <label for="DIENTHOAI">Số điện thoại</label>
+          <Field name="DIENTHOAI" id="DIENTHOAI" type="text" class="form-control" v-model="readerLocal.DIENTHOAI" />
+          <ErrorMessage name="DIENTHOAI" class="error-feedback" />
+        </div>
+      </div>
     </div>
 
     <div class="form-group">
@@ -74,6 +86,9 @@ export default {
       readerFormSchema: yup.object().shape({
         TenDangNhap: yup.string().required("Vui lòng nhập tài khoản.").min(5, "Tài khoản phải ít nhất 5 ký tự."),
         Password: yup.string().required("Vui lòng nhập mật khẩu.").min(8, "Mật khẩu ít nhất 8 ký tự."),
+        Password2: yup.string()
+          .oneOf([yup.ref("Password"), null], "Mật khẩu nhập lại không khớp.")
+          .required("Vui lòng nhập lại mật khẩu."),
         HOLOT: yup.string().required("Vui lòng nhập họ.").min(2, "Họ phải ít nhất 2 ký tự.").max(50, "Họ tối đa 50 ký tự."),
         TEN: yup.string().required("Vui lòng nhập tên.").min(2, "Tên phải ít nhất 2 ký tự.").max(50, "Tên tối đa 50 ký tự."),
         NGAYSINH: yup
@@ -108,7 +123,7 @@ export default {
 </script>
 
 <style scoped>
-@import "@/assets/form.css";
+@import "../assets/form.css";
 
 .error-feedback {
   color: red;

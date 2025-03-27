@@ -2,12 +2,13 @@
   <div class="page row">
     <div class="col-md-10">
       <InputSearch v-model="searchText" />
-    </div>
-    <div class="mt-3 col-md-6">
+      <br>
       <h4>
         Nhân Viên
         <i class="fas fa-users"></i>
       </h4>
+    </div>
+    <div class="mt-3 col-md-6">
       <StaffList
         v-if="filteredStaffsCount > 0"
         :staffs="filteredstaffs"
@@ -24,16 +25,6 @@
       <div v-if="activeStaff">
         <h4>Chi tiết</h4>
         <StaffCard :staff="activeStaff" />
-        <router-link
-          :to="{
-            name: 'staff.edit',
-            params: { id: activeStaff._id },
-          }"
-        >
-          <span class="mt-2 badge badge-warning">
-            <i class="fas fa-edit"></i> Hiệu chỉnh</span
-          >
-        </router-link>
       </div>
     </div>
   </div>
@@ -107,6 +98,7 @@ export default {
 <style scoped>
 .page {
   text-align: left;
-  max-width: 750px;
+  max-width: 100%;
+  min-height: 450px;
 }
 </style>

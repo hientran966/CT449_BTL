@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <h4>Thêm độc giả</h4>
+    <h4>Thông tin đọc giả</h4>
     <ReaderForm :reader="reader" @submit:reader="addReader" />
     <p v-if="message" class="message">{{ message }}</p>
   </div>
@@ -45,5 +45,8 @@ export default {
   color: red;
   font-weight: bold;
   margin-top: 10px;
+}
+.page {
+  min-width: 900px;
 }
 </style>

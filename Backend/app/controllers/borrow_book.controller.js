@@ -28,6 +28,7 @@ exports.create = async (req, res, next) => {
         if (!req.body.MASACH || typeof req.body.MASACH !== 'string') {
             return next(new ApiError(400, "Book ID must be a non-empty string"));
         }
+        req.body.NGAYMUON = new Date().toISOString().split("T")[0];
         if (!req.body.NGAYMUON || isNaN(new Date(req.body.NGAYMUON))) {
             return next(new ApiError(400, "Borrow date must be a valid date"));
         }
@@ -36,7 +37,7 @@ exports.create = async (req, res, next) => {
         }
 
         const borrowBookService = new BorrowBookService(MongoDB.client);
-
+        const NGAYMUON = new Date().toISOString().split("T")[0];
         const document = await borrowBookService.create(req.body);
 
         await bookService.decreaseQuantity(book._id);
@@ -101,8 +102,6 @@ exports.update = async (req, res, next) => {
         }
 
         if (req.body.TRANGTHAI === "Đã Trả") {
-            req.body.NGAYTRA = new Date().toISOString().split("T")[0];
-
             await bookService.increaseQuantity(book._id);
         }
 

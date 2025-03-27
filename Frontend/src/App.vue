@@ -14,8 +14,8 @@ export default {
 </script>
 
 <template>
-  <div :class="{'login-background': isLoginPage}" id="app">
-    <AppHeader v-if="!isLoginPage" />
+  <AppHeader v-if="!isLoginPage" />
+  <div class="login-background" id="app">
     <div class="container mt-3">
       <router-view />
     </div>
@@ -35,7 +35,7 @@ export default {
 .page {
   max-width: 400px;
   margin: auto;
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.9);
   padding: 20px;
   border-radius: 10px;
 }

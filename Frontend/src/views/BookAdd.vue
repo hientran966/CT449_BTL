@@ -1,6 +1,6 @@
 <template>
   <div v-if="book" class="page">
-    <h4>Thêm Liên hệ</h4>
+    <h4>Thêm Sách</h4>
     <bookForm
       :book="book"
       @submit:book="addBook"

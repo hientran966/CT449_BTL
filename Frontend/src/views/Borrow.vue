@@ -2,12 +2,13 @@
   <div class="page row">
     <div class="col-md-10">
       <InputSearch v-model="searchText" />
-    </div>
-    <div class="mt-3 col-md-12">
+      <br>
       <h4>
         Quản lý mượn sách
         <i class="fas fa-list"></i>
       </h4>
+    </div>
+    <div class="mt-3 col-md-12">
       <BorrowTable
         v-if="filteredCount > 0"
         :borrows="filtered"
@@ -77,6 +78,7 @@ export default {
 <style scoped>
 .page {
   text-align: left;
-  max-width: 750px;
+  max-width: 100%;
+  min-height: 450px;
 }
 </style>

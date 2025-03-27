@@ -30,7 +30,7 @@ export default {
     },
     computed: {
         gender() {
-            return this.reader.GIOITINH === 1 ? "Nam" : "Nữ";
+            return this.reader.PHAI === 1 ? "Nam" : "Nữ";
         },
         fullName() {
             return `${this.reader.HOLOT} ${this.reader.TEN}`;

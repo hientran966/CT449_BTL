@@ -2,12 +2,13 @@
   <div class="page row">
     <div class="col-md-10">
       <InputSearch v-model="searchText" />
-    </div>
-    <div class="mt-3 col-md-6">
+      <br>
       <h4>
         Nhà Xuất Bản
         <i class="fas fa-address-book"></i>
       </h4>
+    </div>
+    <div class="mt-3 col-md-6">
       <PublisherList
         v-if="filteredPublishersCount > 0"
         :publishers="filteredPublishers"
@@ -127,6 +128,7 @@ export default {
 <style scoped>
 .page {
   text-align: left;
-  max-width: 750px;
+  max-width: 100%;
+  min-height: 450px;
 }
 </style>

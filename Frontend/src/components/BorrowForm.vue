@@ -18,9 +18,9 @@
     </div>
 
     <div class="form-group">
-      <label for="NGAYMUON">Ngày Mượn</label>
-      <Field name="NGAYMUON" type="date" class="form-control" v-model="borrowLocal.NGAYMUON" />
-      <ErrorMessage name="NGAYMUON" class="error-feedback" />
+      <label for="NGAYTRA">Ngày Trả</label>
+      <Field name="NGAYTRA" type="date" class="form-control" v-model="borrowLocal.NGAYTRA" />
+      <ErrorMessage name="NGAYTRA" class="error-feedback" />
     </div>
 
     <div class="form-group">
@@ -54,15 +54,15 @@ export default {
       borrowLocal: {
         MASACH: this.id,
         MADOCGIA: "",
-        NGAYMUON: "",
+        NGAYTRA: "",
       },
       bookTitle: "",
       borrowFormSchema: yup.object().shape({
-        NGAYMUON: yup
+        NGAYTRA: yup
           .date()
-          .required("Vui lòng chọn ngày mượn.")
+          .required("Vui lòng chọn ngày trả.")
           .min(today, "Không được chọn ngày trong quá khứ.")
-          .max(maxDate, "Ngày mượn không được vượt quá 30 ngày kể từ hôm nay."),
+          .max(maxDate, "Ngày trả không được vượt quá 30 ngày kể từ hôm nay."),
       }),
     };
   },
@@ -89,5 +89,5 @@ export default {
 </script>
 
 <style scoped>
-@import "@/assets/form.css";
+@import "../assets/form.css";
 </style>

@@ -2,12 +2,13 @@
   <div class="page row">
     <div class="col-md-10">
       <InputSearch v-model="searchText" />
-    </div>
-    <div class="mt-3 col-md-6">
+      <br>
       <h4>
         Sách
         <i class="fas fa-book"></i>
       </h4>
+    </div>
+    <div class="mt-3 col-md-6">
       <BookList
         v-if="filteredBooksCount > 0"
         :books="filteredBooks"
@@ -155,5 +156,6 @@ export default {
 .page {
   text-align: left;
   max-width: 100%;
+  min-height: 450px;
 }
 </style>
