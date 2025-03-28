@@ -37,7 +37,7 @@ exports.create = async (req, res, next) => {
         }
 
         const borrowBookService = new BorrowBookService(MongoDB.client);
-        const NGAYMUON = new Date().toISOString().split("T")[0];
+
         const document = await borrowBookService.create(req.body);
 
         await bookService.decreaseQuantity(book._id);
