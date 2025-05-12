@@ -11,7 +11,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="borrow in borrows" :key="borrow._id">
+            <tr v-for="borrow in filteredBorrows" :key="borrow._id">
                 <td>{{ getBookName(borrow.MASACH) }}</td>
                 <td>{{ getReaderName(borrow.MADOCGIA) }}</td>
                 <td>{{ borrow.NGAYMUON }}</td>
@@ -46,6 +46,7 @@ import AuthService from "@/services/auth.service";
 export default {
     props: {
         borrows: { type: Array, default: [] },
+        searchText: { type: String, default: '' },
     },
     data() {
         return {
@@ -53,6 +54,19 @@ export default {
             readers: {},
             isStaff: false,
         };
+    },
+    computed: {
+        filteredBorrows() {
+            if (!this.searchText) return this.borrows;
+            const search = this.searchText.toLowerCase();
+            return this.borrows.filter(borrow => 
+                this.getBookName(borrow.MASACH).toLowerCase().includes(search) ||
+                this.getReaderName(borrow.MADOCGIA).toLowerCase().includes(search) ||
+                borrow.NGAYMUON.includes(search) ||
+                borrow.NGAYTRA.includes(search) ||
+                borrow.TRANGTHAI.toLowerCase().includes(search)
+            );
+        }
     },
     methods: {
         async loadData() {

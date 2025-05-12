@@ -12,6 +12,7 @@
       <BorrowTable
         v-if="filteredCount > 0"
         :borrows="filtered"
+        :searchText="searchText"
       />
       <p v-else>Không có dữ liệu.</p>
     </div>
